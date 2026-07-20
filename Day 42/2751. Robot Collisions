@@ -1,0 +1,70 @@
+class Solution {
+public:
+    vector<int> survivedRobotsHealths(vector<int>& positions, vector<int>& healths, string directions) {
+        int n = positions.size();
+        
+        // {position, health, index, direction}
+        vector<tuple<int,int,int,char>> robots;
+        for (int i = 0; i < n; i++) {
+            robots.push_back({positions[i], healths[i], i, directions[i]});
+        }
+        
+        // Sort by position
+        sort(robots.begin(), robots.end());
+        
+        stack<int> st; // stores indices of robots in sorted array
+        vector<int> alive(n, 1);
+        
+        for (int i = 0; i < n; i++) {
+            auto &[pos, health, idx, dir] = robots[i];
+            
+            if (dir == 'R') {
+                st.push(i);
+            } else {
+                // current robot moving left
+                while (!st.empty() && get<1>(robots[i]) > 0) {
+                    int j = st.top();
+                    
+                    if (get<1>(robots[j]) < get<1>(robots[i])) {
+                        // right robot dies
+                        st.pop();
+                        get<1>(robots[i]) -= 1;
+                        alive[j] = 0;
+                    } 
+                    else if (get<1>(robots[j]) > get<1>(robots[i])) {
+                        // left robot dies
+                        get<1>(robots[j]) -= 1;
+                        alive[i] = 0;
+                        get<1>(robots[i]) = 0;
+                        break;
+                    } 
+                    else {
+                        // both die
+                        alive[j] = 0;
+                        alive[i] = 0;
+                        st.pop();
+                        get<1>(robots[i]) = 0;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // Collect survivors in original order
+        vector<pair<int,int>> res;
+        for (int i = 0; i < n; i++) {
+            if (alive[i]) {
+                res.push_back({get<2>(robots[i]), get<1>(robots[i])});
+            }
+        }
+        
+        sort(res.begin(), res.end());
+        
+        vector<int> ans;
+        for (auto &p : res) {
+            ans.push_back(p.second);
+        }
+        
+        return ans;
+    }
+};
