@@ -1,0 +1,21 @@
+class Solution {
+public:
+    int minOperations(string s) {
+        int mismatchStart0 = 0; // pattern: 010101...
+    int mismatchStart1 = 0; // pattern: 101010...
+
+    for (int i = 0; i < s.length(); i++) {
+        // Expected characters
+        char expected0 = (i % 2 == 0) ? '0' : '1';
+        char expected1 = (i % 2 == 0) ? '1' : '0';
+
+        if (s[i] != expected0)
+            mismatchStart0++;
+
+        if (s[i] != expected1)
+            mismatchStart1++;
+    }
+
+    return min(mismatchStart0, mismatchStart1);
+    }
+};
