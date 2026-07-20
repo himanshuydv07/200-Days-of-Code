@@ -1,0 +1,69 @@
+class DSU {
+public:
+    vector<int> parent, rankv;
+
+    DSU(int n) {
+        parent.resize(n);
+        rankv.resize(n, 0);
+        for (int i = 0; i < n; i++) parent[i] = i;
+    }
+
+    int find(int x) {
+        if (parent[x] != x)
+            parent[x] = find(parent[x]);
+        return parent[x];
+    }
+
+    void unite(int a, int b) {
+        int pa = find(a), pb = find(b);
+        if (pa == pb) return;
+
+        if (rankv[pa] < rankv[pb])
+            parent[pa] = pb;
+        else if (rankv[pb] < rankv[pa])
+            parent[pb] = pa;
+        else {
+            parent[pb] = pa;
+            rankv[pa]++;
+        }
+    }
+};
+
+
+class Solution {
+public:
+    int minimumHammingDistance(vector<int>& source, vector<int>& target, vector<vector<int>>& allowedSwaps) {
+        int n = source.size();
+        DSU dsu(n);
+
+        // union allowed swaps
+        for (auto &e : allowedSwaps)
+            dsu.unite(e[0], e[1]);
+
+        // group indices by parent
+        unordered_map<int, vector<int>> groups;
+        for (int i = 0; i < n; i++)
+            groups[dsu.find(i)].push_back(i);
+
+        int ans = 0;
+
+        // check each group
+        for (auto &g : groups) {
+            unordered_map<int,int> freq;
+
+            // count source values
+            for (int idx : g.second)
+                freq[source[idx]]++;
+
+            // match with target
+            for (int idx : g.second) {
+                if (freq[target[idx]] > 0)
+                    freq[target[idx]]--;
+                else
+                    ans++;
+            }
+        }
+
+        return ans;
+    }
+};
