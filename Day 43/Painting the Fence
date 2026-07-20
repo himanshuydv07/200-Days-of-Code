@@ -1,0 +1,21 @@
+class Solution {
+  public:
+    int countWays(int n, int k) {
+        // code here
+        if (n == 1) return k;
+    if (n == 2) return k * k;
+
+    int same = k;           // for n = 2: same = k (RR, BB, etc.)
+    int diff = k * (k - 1); // for n = 2: different colors
+
+    for (int i = 3; i <= n; i++) {
+        int newSame = diff;  // only way: last two same
+        int newDiff = (same + diff) * (k - 1);
+
+        same = newSame;
+        diff = newDiff;
+    }
+
+    return same + diff;
+    }
+};
