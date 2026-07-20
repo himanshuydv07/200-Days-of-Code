@@ -1,0 +1,64 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> getBiggestThree(vector<vector<int>>& grid) {
+        int m = grid.size(), n = grid[0].size();
+        set<int, greater<int>> sums;
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+
+                // k = 0 (single cell rhombus)
+                sums.insert(grid[i][j]);
+
+                for (int k = 1; ; k++) {
+                    int top = i - k, bottom = i + k;
+                    int left = j - k, right = j + k;
+
+                    if (top < 0 || bottom >= m || left < 0 || right >= n)
+                        break;
+
+                    int sum = 0;
+
+                    int x = top, y = j;
+
+                    // top -> right
+                    while (x < i && y < right) {
+                        sum += grid[x][y];
+                        x++; y++;
+                    }
+
+                    // right -> bottom
+                    while (x < bottom && y > j) {
+                        sum += grid[x][y];
+                        x++; y--;
+                    }
+
+                    // bottom -> left
+                    while (x > i && y > left) {
+                        sum += grid[x][y];
+                        x--; y--;
+                    }
+
+                    // left -> top
+                    while (x > top && y < j) {
+                        sum += grid[x][y];
+                        x--; y++;
+                    }
+
+                    sums.insert(sum);
+                }
+            }
+        }
+
+        vector<int> ans;
+        for (int v : sums) {
+            ans.push_back(v);
+            if (ans.size() == 3) break;
+        }
+
+        return ans;
+    }
+};
