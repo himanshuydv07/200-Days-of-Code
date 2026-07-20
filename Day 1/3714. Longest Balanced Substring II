@@ -1,0 +1,66 @@
+class Solution {
+public:
+    int longestBalanced(string s) {
+        int n = s.size();
+
+    int a = 0, b = 0, c = 0;
+    int ans = 1;
+
+    // For single-character runs
+    int run = 1;
+
+    // Maps for prefix states
+    map<pair<int, int>, int> mapABC;
+    map<pair<int, int>, int> mapAB;
+    map<pair<int, int>, int> mapAC;
+    map<pair<int, int>, int> mapBC;
+
+    // Initial prefix state
+    mapABC[{0, 0}] = -1;
+    mapAB[{0, 0}] = -1;
+    mapAC[{0, 0}] = -1;
+    mapBC[{0, 0}] = -1;
+
+    for (int i = 0; i < n; i++) {
+        if (s[i] == 'a') a++;
+        else if (s[i] == 'b') b++;
+        else c++;
+
+        // single-character substring tracking
+        if (i > 0 && s[i] == s[i - 1]) run++;
+        else run = 1;
+
+        ans = max(ans, run);
+
+        // --- All three characters case ---
+        pair<int, int> keyABC = {a - b, a - c};
+        if (mapABC.count(keyABC))
+            ans = max(ans, i - mapABC[keyABC]);
+        else
+            mapABC[keyABC] = i;
+
+        // --- a & b case ---
+        pair<int, int> keyAB = {a - b, c};
+        if (mapAB.count(keyAB))
+            ans = max(ans, i - mapAB[keyAB]);
+        else
+            mapAB[keyAB] = i;
+
+        // --- a & c case ---
+        pair<int, int> keyAC = {a - c, b};
+        if (mapAC.count(keyAC))
+            ans = max(ans, i - mapAC[keyAC]);
+        else
+            mapAC[keyAC] = i;
+
+        // --- b & c case ---
+        pair<int, int> keyBC = {b - c, a};
+        if (mapBC.count(keyBC))
+            ans = max(ans, i - mapBC[keyBC]);
+        else
+            mapBC[keyBC] = i;
+    }
+
+    return ans;
+    }
+};
