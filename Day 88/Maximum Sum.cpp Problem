@@ -1,0 +1,25 @@
+class Solution {
+  public:
+    
+    unordered_map<long long, long long> dp;
+    
+    long long solve(long long n) {
+        if (n == 0)
+            return 0;
+            
+        if (dp.count(n))
+            return dp[n];
+            
+        long long breakValue =
+            solve(n / 2) +
+            solve(n / 3) +
+            solve(n / 4);
+            
+        return dp[n] = max(n, breakValue);
+    }
+    
+    int maxSum(int n) {
+        // code here.
+        return (int)solve(n);
+    }
+};
