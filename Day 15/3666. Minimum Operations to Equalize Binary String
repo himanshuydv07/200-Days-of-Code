@@ -1,0 +1,32 @@
+class Solution {
+public:
+    int minOperations(string s, int k) {
+        int n = s.length();
+        int z = 0;
+        for(char c : s)
+            if(c == '0')
+                z++;
+
+        if(z == 0) return 0;
+
+        for(long long t = 1; t <= n; t++) {
+            long long total = t * 1LL * k;
+
+            if(total < z) continue;
+            if((total - z) % 2 != 0) continue;
+
+            // compute max possible sum with parity restriction
+            long long largestOdd = (t % 2 ? t : t - 1);
+            long long largestEven = (t % 2 ? t - 1 : t);
+
+            long long maxSum =
+                z * largestOdd +
+                (n - z) * largestEven;
+
+            if(total <= maxSum)
+                return t;
+        }
+
+        return -1;
+    }
+};
