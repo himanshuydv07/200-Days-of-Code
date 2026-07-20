@@ -1,0 +1,39 @@
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool canFinish(long long T, int h, vector<int>& wt) {
+        long long total = 0;
+
+        for (int t : wt) {
+            long long val = (2 * T) / t;
+            long long x = (sqrt(1 + 4 * val) - 1) / 2;
+            total += x;
+
+            if (total >= h) return true;
+        }
+
+        return total >= h;
+    }
+
+    long long minNumberOfSeconds(int mountainHeight, vector<int>& workerTimes) {
+        long long left = 0, right = 1e18;
+        long long ans = right;
+
+        while (left <= right) {
+            long long mid = left + (right - left) / 2;
+
+            if (canFinish(mid, mountainHeight, workerTimes)) {
+                ans = mid;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        return ans;
+    }
+};
