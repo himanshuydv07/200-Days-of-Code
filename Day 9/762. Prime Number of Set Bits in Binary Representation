@@ -1,0 +1,22 @@
+class Solution {
+public:
+   int countSetBits(int n) {
+    return __builtin_popcount(n); 
+}
+bool isPrime(int n) {
+    static unordered_set<int> primeSet = {2, 3, 5, 7, 11, 13, 17, 19};
+    return primeSet.count(n) > 0;
+}
+
+int countPrimeSetBits(int left, int right) {
+    int count = 0;
+    for (int i = left; i <= right; ++i) {
+        int setBits = countSetBits(i);
+        if (isPrime(setBits)) {
+            count++;
+        }
+    }
+    return count;
+        
+    }
+};
