@@ -1,0 +1,22 @@
+class Solution {
+  public:
+    int maxProfit(vector<int>& arr, int k) {
+        // Code here
+        int n = arr.size();
+    
+    int hold = -arr[0]; // buying on first day
+    int cash = 0;       // no stock initially
+    
+    for (int i = 1; i < n; i++) {
+        int prevCash = cash;
+        
+        // Sell today
+        cash = max(cash, hold + arr[i] - k);
+        
+        // Buy today
+        hold = max(hold, prevCash - arr[i]);
+    }
+    
+    return cash;
+    }
+};
