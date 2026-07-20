@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int dp[301][27][27];
+
+    pair<int,int> getPos(int c){
+        return {c / 6, c % 6};
+    }
+
+    int dist(int a, int b){
+        if(a == 26 || b == 26) return 0; // free finger
+        auto p1 = getPos(a);
+        auto p2 = getPos(b);
+        return abs(p1.first - p2.first) + abs(p1.second - p2.second);
+    }
+
+    int solve(string &word, int i, int f1, int f2){
+        if(i == word.size()) return 0;
+
+        int &res = dp[i][f1][f2];
+        if(res != -1) return res;
+
+        int cur = word[i] - 'A';
+
+        // move finger1
+        int use1 = dist(f1, cur) + solve(word, i + 1, cur, f2);
+
+        // move finger2
+        int use2 = dist(f2, cur) + solve(word, i + 1, f1, cur);
+
+        return res = min(use1, use2);
+    }
+
+    int minimumDistance(string word) {
+        memset(dp, -1, sizeof(dp));
+        return solve(word, 0, 26, 26); // 26 = free finger
+    }
+};
