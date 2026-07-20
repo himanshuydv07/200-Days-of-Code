@@ -1,0 +1,32 @@
+class Solution {
+public:
+    bool areSimilar(vector<vector<int>>& mat, int k) {
+         int m = mat.size();
+    int n = mat[0].size();
+
+    int shift = k % n; // effective shift
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+
+            // Find original index after shift
+            int originalIndex;
+
+            if (i % 2 == 0) {
+                // even row → left shift
+                originalIndex = (j + shift) % n;
+            } else {
+                // odd row → right shift
+                originalIndex = (j - shift + n) % n;
+            }
+
+            // Check if matches original
+            if (mat[i][j] != mat[i][originalIndex]) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+    }
+};
