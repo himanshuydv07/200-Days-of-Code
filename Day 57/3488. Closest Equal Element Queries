@@ -1,0 +1,39 @@
+class Solution {
+public:
+    vector<int> solveQueries(vector<int>& nums, vector<int>& queries) {
+        int n = nums.size();
+        unordered_map<int, vector<int>> mp;
+
+        for (int i = 0; i < n; i++)
+            mp[nums[i]].push_back(i);
+
+        vector<int> best(n, INT_MAX);
+
+        for (auto &p : mp) {
+            auto &v = p.second;
+            int m = v.size();
+            if (m == 1) continue;
+
+            // duplicate for circular
+            vector<int> t = v;
+            for (int x : v) t.push_back(x + n);
+
+            // check consecutive
+            for (int i = 1; i < t.size(); i++) {
+                int d = t[i] - t[i - 1];
+                int idx1 = t[i] % n;
+                int idx2 = t[i - 1] % n;
+
+                best[idx1] = min(best[idx1], d);
+                best[idx2] = min(best[idx2], d);
+            }
+        }
+
+        vector<int> ans;
+        for (int q : queries) {
+            if (best[q] == INT_MAX) ans.push_back(-1);
+            else ans.push_back(best[q]);
+        }
+        return ans;
+    }
+};
