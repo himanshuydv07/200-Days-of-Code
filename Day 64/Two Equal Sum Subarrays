@@ -1,0 +1,22 @@
+class Solution {
+  public:
+    bool canSplit(vector<int>& arr) {
+        // code here
+         long long total = 0;
+    for (int x : arr) total += x;
+
+    // if total sum odd -> impossible
+    if (total % 2 != 0) return false;
+
+    long long prefix = 0;
+    long long target = total / 2;
+
+    for (int i = 0; i < arr.size() - 1; i++) {
+        prefix += arr[i];
+        if (prefix == target)
+            return true;
+    }
+
+    return false;
+    }
+};
