@@ -1,0 +1,56 @@
+class Solution {
+  public:
+    vector<int> nextPalindrome(vector<int>& num) {
+        int n = num.size();
+        
+        // check all 9's
+        bool all9 = true;
+        for (int i = 0; i < n; i++) {
+            if (num[i] != 9) {
+                all9 = false;
+                break;
+            }
+        }
+        
+        // if all 9's -> 100...001
+        if (all9) {
+            vector<int> res(n + 1, 0);
+            res[0] = 1;
+            res[n] = 1;
+            return res;
+        }
+        
+        vector<int> res = num;
+        
+        // mirror left to right
+        int i = 0, j = n - 1;
+        while (i < j) {
+            res[j] = res[i];
+            i++; j--;
+        }
+        
+        // if already greater, return
+        if (res > num) return res;
+        
+        // add 1 to middle
+        int carry = 1;
+        int mid = (n - 1) / 2;
+        
+        while (mid >= 0 && carry) {
+            int val = res[mid] + carry;
+            res[mid] = val % 10;
+            carry = val / 10;
+            mid--;
+        }
+        
+        // mirror again
+        i = 0; 
+        j = n - 1;
+        while (i < j) {
+            res[j] = res[i];
+            i++; j--;
+        }
+        
+        return res;
+    }
+};
