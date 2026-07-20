@@ -1,0 +1,43 @@
+/*
+class Node {
+  public:
+    int data;
+    Node *left;
+    Node *right;
+
+    Node(int val) {
+        data = val;
+        left = right = NULL;
+    }
+};
+*/
+class Solution {
+  public:
+  long long dfs(Node* root, long long currSum, long long k,
+                  unordered_map<long long, int>& mp) {
+        if (!root) return 0;
+
+        currSum += root->data;
+
+        long long count = 0;
+
+        if (mp.count(currSum - k))
+            count += mp[currSum - k];
+
+        mp[currSum]++;
+
+        count += dfs(root->left, currSum, k, mp);
+        count += dfs(root->right, currSum, k, mp);
+
+        mp[currSum]--;  // backtrack
+
+        return count;
+    }
+    int countAllPaths(Node *root, int k) {
+        // code here
+        unordered_map<long long, int> mp;
+        mp[0] = 1; // base case
+
+        return dfs(root, 0, k, mp);
+    }
+};
