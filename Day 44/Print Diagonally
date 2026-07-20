@@ -1,0 +1,21 @@
+class Solution {
+  public:
+    vector<int> diagView(vector<vector<int>> mat) {
+        // code here
+           int n = mat.size();
+    vector<int> result;
+
+    for (int s = 0; s <= 2 * (n - 1); s++) {
+        int i = max(0, s - (n - 1));
+        int j = s - i;
+
+        while (i < n && j >= 0) {
+            result.push_back(mat[i][j]);
+            i++;
+            j--;
+        }
+    }
+
+    return result;
+    }
+};
